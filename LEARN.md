@@ -1,11 +1,12 @@
-# Create and Burn NFT on Solana Blockchain using only Web3
+# Create and Burn NFT on Solana Blockchain using only Web3 #
 
-
-## **Introduction**
+**Introduction**
 
 In this quest we will be working on creating our own NFT (Non-Fungible Token) in Solana Blockchain using web3.js only.Everyday we hear the term NFT and few of the NFTs get sold for millions as well. So in this quest we will deep dive into the NFT creation and burning process.
 
-## **What will you get after going through this quest ?**
+**What will you get after going through this quest ?**
+
+
 
 1. You will understand the difference between Fungible Token and NFT (Non-Fungible Token).
 2. You will understand how to **create** your own NFT.
@@ -13,7 +14,7 @@ In this quest we will be working on creating our own NFT (Non-Fungible Token) in
 4. You will understand how to **burn** your NFT.
 5. You will understand the importance of associated accounts while creating the NFT.
 
-## **What is the difference between Fungible Token and Non-Fungible Token (NFT) ?**
+**What is the difference between Fungible Token and Non-Fungible Token (NFT) ?**
 
 **Fungible token : **The tokens which have the supply of more than 1 and can be distributed to different users.
 
@@ -25,20 +26,25 @@ Hence NFT (Non-Fungible Token) is a form of token which can exist uniquely throu
 
 It provides the ownership of the digital asset which can be uniquely identified forever.
 
-## **Why create your own NFT ?**
+**Why create your own NFT ?**
 
 Creating our own token which can uniquely exist gives us the feeling of ownership. You can claim any artwork or any piece of unique art which you think can have value in the future.
 
 These days NFTs are also being categorised under the future investment as with the more adoption of blockchain, it is believed that value of NFTs will increase in future.
 
-## **Prerequisites to work on this quest**
-1. Basic knowledge of crypto wallet to approve the transaction (Phantom wallet specifically).
+**Prerequisites to work on this quest**
+
+
+
+1. Knowledge of crypto wallet (Phantom wallet specifically).
 2. A basic react app with wallet connectivity feature.
 3. Solana cluster can be : local, devnet or testnet.
 4. Funded Solana wallet atleast 0.5 SOL .
 5. For better understanding, please go through our first quest on **creating a wallet connection** with react app.
 
-## **Folder structure expected of the react app to run this quest**
+**Folder structure expected of the react app to run this quest**
+
+
 
 * Assuming app name as "DistributeToken"
     * App-Name
@@ -48,60 +54,48 @@ These days NFTs are also being categorised under the future investment as with t
             * utils
                 * nftCreation.js
                 * nftBurn.js
-                * programIds.js
+                * programId.js
             * App.js
             * Index.js
             * Package.json
 
 **Basic terminologies to digest before we jump into the quest**
 
-1. **Borsh: **A  library which helps in serialising the create NFT transaction. Serialisation is the process of converting an object into a stream of bytes which can be used by on-chain programs to again deserialize it to read the instructions and perform actions on it.
-2. **Minting Token: **When you try to print new currency notes in the real world, it increases the supply of the notes. In the same way, if we need to increase the supply of our token in the market then we mint (print) the tokens to an associated account. \
+
+
+1. **Borsh:** A  library which helps in serialising the create NFT transaction. Serialisation is the process of converting an object into a stream of bytes which can be used by on-chain programs to again deserialize it to read the instructions and perform actions on it.
+2. **Minting Token:** When you try to print new currency notes in the real world, it increases the supply of the notes. In the same way, if we need to increase the supply of our token in the market then we mint (print) the tokens to an associated account. \
 Minting process will increase the total supply of the custom token. In the case of NFT, the total supply can be only 1.
 
-## Subquest: NFT creation flow ##
-![Alt text](create-nft-solana.png?raw=true "Aidrop Token")
+### Subquest: Metaplex NFT creation flow with metadata ###
+![alt_text](./learn_src/learn_assets/create-metaplex-nft-solana.png "Create or Burn NFT on Solana ")
 
-## Subquest: Create NFT util functions ##
+### Subquest: NFT creation flow ###
+![alt_text](./learn_src/learn_assets/create-nft-solana.png "Create or Burn NFT on Solana ")
+
+### Subquest: Create NFT util functions ###
+
+
 As NFTs are meant to be represented in the form of image/video/gif, hence each NFT needs to be associated with a metadata account which can hold the image/video/gif for the NFT and fetch the data wherever needed.
 
-We will be using **arweave** blockchain based data hosting service, which is decentralised and distributed across the network.
-
-**prepPayForFilesTxn:** It is used to calculate the fees for the files which need to be uploaded to arweave. It is mentioned in the arweave documentation that you need Tokens to upload onto the arweave platform but none of the creators faced any such issue yet.
-
-**findProgramAddress**: It is used to find the account address based on the program id and seed provided. It is a deterministic function, hence it will always provide the address for the same seed and same program id.
-
-Deterministic function is needed because it will help to deduplicate any associated account with the same mintKey.
-
-**createMint** : It is used to create the minting address for the NFT with the required parameters.
-
-1. **Instructions**: It includes all the instructions related to mint creation, associate account creation and metadata upload.
-2. **payer**: This parameter defines the payer of the transaction.
-3. **mintRentExempt: **This parameter is required to enable rent free account on Solana blockchain.
-4. **decimals:** This parameter is required to tell how many decimals will be placed with the mint key. In the case of NFT, where maximum supply needs to be 1 only, then it will be passed as 0.
-5. **owner:** This parameter tells about the owner of the wallet as well as owner of the NFT which will be minted/created.
-6. **freezeAuthority:** This parameter tells who can freeze authority of the NFT created. Freezing authority is a super set of owners and can override the actions of the owner.
-7. **signers:** This parameter tells about the signers of the transaction, of course while creating the NFT, connected wallet will act as a signer.
-
-**createUninitializedMint:** It is to create the basic mint account to hold the uninitialised token. The token which is just minted but not provided any value. This is needed to attach the metadata with the token before increasing the supply of the token to 1.
-
-**createUninitializedAccount: **Used** **to create the associated account to hold the SPL token which is going to be NFT.
-
-**createAssociatedTokenAccountInstruction:** Used to create the associate token instruction, which will help to create an associate account which can hold the NFT.
-
-**sendTransactionWithRetry: **Used** **to retry the transaction in case of failure. While doing any transaction in blockchain there is always a chance of transaction failure and it can lead to bad user experience if it fails in the first go. Hence this function helps to re-initiate the transaction in case of failure.
-
-**getUnixTs:** Helps to get the correct unix timestamp in milliseconds.
-
-**awaitTransactionSignatureConfirmation:** It waits for the transaction’s signature.
-
-**sendSignedTransaction:** Used to send the signed transaction to the Solana blockchain, which will eventually write the data instruction on the solana blockchain.
-
-**getEdition:** Helps to find the correct edition of the metadata based on the parameters passed.
-
-​​**createMetadata:** Helps to create the metadata for the NFT. A metadata can contain anything from images, gif, urls or any piece of code as well. Hence using it logically with the different use-cases can serve many purposes.
+We will be using **arweave **blockchain based data hosting service, which is decentralised and distributed across the network.
 
 **File: src/utils/nftCreation.js**
+
+In this code snippet we will talk about the different libraries which are needed to work on this quest.
+
+**borsh:** It is a library which provides us the functionality of serialization or deserialization of data. 
+
+**bs58**: It helps to encode the string to base 58 encoding. 
+
+**@solana/spl-token :** It is a library which holds all the util functions to create the token on the solana blockchain.
+
+**crypto:** It is an algorithm that performs data encryption and decryption.
+
+**bn.js:** The BN.js library for calculating with big numbers in JavaScript.
+
+**@solana/web3.js:** It helps to prepare the instruction for transactions using various util methods.
+
 
 ```
 import { BinaryReader, BinaryWriter } from 'borsh';
@@ -119,7 +113,39 @@ import {
      SYSVAR_RENT_PUBKEY,
      TransactionInstruction
    } from "@solana/web3.js";
-import { programIds } from './programIds';
+```
+
+
+**sleepUtil:** This util function will help to make the setTimeOut work as a synchronous function. With the help of this function we can wait synchronously at any place in the code.
+
+**NETWORK:** This parameter signifies to which cluster of Solana the application will be connected to.
+
+Other variables mentioned below are the predefined standards from the Metaplex which internally uses metadata on-chain program to store all the artifacts of the NFT.
+
+**File: src/utils/nftCreation.js**
+
+
+```
+export const TOKEN_PROGRAM_ID = new PublicKey(
+ 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
+);
+const SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID = new PublicKey(
+ 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL',
+);
+
+const METADATA_PROGRAM_ID =
+   'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s';
+
+const MEMO_ID = new PublicKey(
+ 'MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr',
+);
+
+const programIds = {
+ token: TOKEN_PROGRAM_ID,
+ associatedToken: SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
+ metadata: METADATA_PROGRAM_ID,
+ memo: MEMO_ID,
+}
 
 const sleepUtil = (ms) => {
    return new Promise(resolve => setTimeout(resolve, ms));
@@ -142,7 +168,28 @@ export const MetadataKey = {
    EditionMarker : 7,
 }
 export const TOKEN_PROGRAM_ID = programIds.token
+```
 
+
+### On-chain program’s data structures###
+
+
+On-chain program expects the data to be in structure format hence to pass a valid format the class needs to be created and then serialised through Borsh serialiser.
+
+Serialisation is important without which an on-chain program will not be able to deserialize the instruction data and it will return fatal error.
+
+**CreateMetadataArgs:** This defines the structure of the data which is expected from the Metaplex on-chain programs to perform the NFT creation action.
+
+**UpdateMetadataArgs:** This defines the structure of the data to update the metadata of the NFT, without which we can not update the metadata of the NFT.
+
+**CreateMasterEditionArgs:** This defines the structure of the data which needs to create Master Edition of the NFT, which can be minted to other NFTs in the future. Users can set the max supply for the master edition which can be minted.
+
+**Creator**: This defines the structure of the data for the creator of the NFT. This information will be injected to each NFT which gets minted on the blockchain.
+
+**Metadata:** This defines the structure of the metadata data which will be associated with each NFT minted on the blockchain. In the metadata we can store the images, videos on the NFT which can be sold on NFT marketplaces.
+
+
+```
 /**
 * Classes to be used to create the NFT
 */
@@ -305,7 +352,20 @@ class CreateMetadataArgs {
       return appliedMask != 0;
    }
  }
+```
 
+
+### Connection provider to the Phantom Wallet###
+
+
+In the utility function below, we are trying to connect to the wallet if it is not connected already.
+
+The util function will alert the user if there is no Phantom Wallet present as a chrome extension.
+
+Phantom wallet as extension injects the “solana” object in the global object of the browser ie. “window” object. We check the existence of wallet by checking the existence of “solana” in the window object.
+
+
+```
 /**
 * Helpder function to detect whether Phantom wallet extension installed or not
 * @param {*} connectToWallet
@@ -326,14 +386,18 @@ export const connectOrGetPhantomProvider = (connectToWallet) => {
 
 
 };
+```
 
-export const connectOrGetPhantomProviderTransient = () => {
- console.log(' connect connectOrGetPhantomProviderTransient called ')
- if ("solana" in window) {
-         window.solana.connect({ onlyIfTrusted: true });
- }
-}
 
+### DOM to Image util function###
+
+
+To create NFT which can hold the image as the metadata we need to provide the image in the form of base64 encoded string and from base64 to file object which eventually gets uploaded to arweave.
+
+So the prepare the file object of the image, we wrote our custom function which can convert any DOM element to base64 string and then base64 to File object.
+
+
+```
 /**
 * Helper function to convert base64 to file object
 * @param {*} dataurl
@@ -348,7 +412,17 @@ export const dataURLtoFile = (dataurl, filename) => {
        }
        return new File([u8arr], filename, {type:mime});
 }
+```
 
+
+**Borsch extended functionality**
+
+This functionality is provided by the Metaplex team where they added an extra util function to the BinaryReader to make the communication seamless with metaplex on-chain programs.
+
+Without the appropriate serialization, the NFT creation will not work as the transaction will not be deserialized properly from the on-chain programs.
+
+
+```
 /**
 * Utility to add functionality to BinaryReader
 */
@@ -378,7 +452,25 @@ export const extendBorsh = () => {
 };
 };
 extendBorsh();
+```
 
+
+**mintNFT: **It is a utility wrapper function which expects different parameters to create the NFT process. All the required parameters are explained below.
+
+**createMint: **It is** **to create the minting address for the NFT with the required parameters.
+
+
+
+1. **Instructions**: It includes all the instructions related to mint creation, associate account creation and metadata upload.
+2. **payer**: This parameter defines the payer of the transaction.
+3. **mintRentExempt: **This parameter is required to enable rent free account on Solana blockchain.
+4. **decimals: **This parameter is required to tell how many decimals will be placed with the mint key. In the case of NFT, where maximum supply needs to be 1 only, then it will be passed as 0.
+5. **owner: **This parameter tells about the owner of the wallet as well as owner of the NFT which will be minted/created.
+6. **freezeAuthority: **This parameter tells who can freeze authority of the NFT created. Freezing authority is a super set of owners and can override the actions of the owner.
+7. **signers: **This parameter tells about the signers of the transaction, of course while creating the NFT, connected wallet will act as a signer.
+
+
+```
  export const mintNFT = async function(
    connection,
    provider,
@@ -656,7 +748,17 @@ extendBorsh();
      }),
    );
  }
+```
 
+
+**prepPayForFilesTxn:** It is used to calculate the fees for the files which need to be uploaded to arweave. It is mentioned in the arweave documentation that you need Tokens to upload onto the arweave platform but none of the creators faced any such issue yet.
+
+**findProgramAddress:** It is used to find the account address based on the program id and seed provided. It is a deterministic function, hence it will always provide the address for the same seed and same program id.
+
+Deterministic function is needed because it will help to deduplicate any associated account with the same mintKey.
+
+
+```
  const prepPayForFilesTxn = async (
    wallet,
    files,
@@ -786,7 +888,17 @@ extendBorsh();
     signers.push(account);
     return account.publicKey;
  }
+```
 
+
+**createUninitializedMint:** It is to create the basic mint account to hold the uninitialised token. The token which is just minted but not provided any value. This is needed to attach the metadata with the token before increasing the supply of the token to 1.
+
+**createUninitializedAccount:** Used to create the associated account to hold the SPL token which is going to be NFT.
+
+**createAssociatedTokenAccountInstruction:** Used to create the associate token instruction, which will help to create an associate account which can hold the NFT.
+
+
+```
  function createAssociatedTokenAccountInstruction(
    instructions,
    associatedTokenAddress,
@@ -839,7 +951,46 @@ extendBorsh();
      }),
    );
  }
+```
 
+
+### Transaction which needs to be signed ###
+
+
+**sendTransactionWithRetry:** Used to retry the transaction in case of failure. While doing any transaction in blockchain there is always a chance of transaction failure and it can lead to bad user experience if it fails in the first go. Hence this function helps to re-initiate the transaction in case of failure.
+
+**getUnixTs:** Helps to get the correct unix timestamp in milliseconds.
+
+**awaitTransactionSignatureConfirmation:** It waits for the transaction’s signature.
+
+**sendSignedTransaction:** Used to send the signed transaction to the Solana blockchain, which will eventually write the data instruction on the solana blockchain.
+
+​​**createMetadata:** Helps to create the metadata for the NFT. A metadata can contain anything from images, gif, urls or any piece of code as well. Hence using it logically with the different use-cases can serve many purposes.
+
+In this step we will be going through the flow of signing the transaction. To complete the mint process we need to write our block to the solana blockchain. To get this transaction on the blockchain it needs to be signed from the wallet owner and sent for the validation.
+
+Few key variables to be used in above function
+
+* transaction.recentBlockhash : As solana works on **proof of history**, hence every transaction in the solana blockchain requires the latest blockhash to be associated with the new transaction. Without the getRecentBlockhash, the validators will not be able to verify the transaction.
+* proof of history**: **Proof of History is a sequence of computation that can provide a way to cryptographically verify passage of time between two events. Validator nodes "timestamp" blocks with cryptographic proofs that some duration of time has passed since the last proof. All data hashed into the proof most certainly have occurred before the proof was generated. The node then shares the new block with validator nodes, which are able to verify those proofs. The blocks can arrive at validators in any order or even could be replayed years later. With such reliable synchronization guarantees, Solana is able to break blocks into smaller batches of transactions called _entries_. Entries are streamed to validators in real time, before any notion of block consensus. \
+This is very different and efficient from the **Proof of Work** or **Proof of Stake** where the energy consumption is high as every node in the blockchain has to perform the action to validate a node. The winner gets the reward but other validator’s work gets wasted in the process. \
+
+* wallet.publicKey: Every transaction needs a fee to be paid to the computers who are making the transaction possible. This parameter tells Solana who will be paying the fees for this transaction. 
+
+<code>wallet.publicKey = provider.publicKey <strong> 
+
+</strong></code>
+
+In Ethereum, we have smart contracts and ethereum accounts which deploys these smart contracts. Hence the address of the smart contract is used to fetch the public function and interact with the smart contract. But there are few functions in smart contracts which can only be executed by the owner of the smart contract. 
+* signers.map: List of accounts which will be used to sign the ongoing transaction, that is defined by this list of signers. If any action is going to be taken on this account, it requires the signature using the account’s private key. This ensures that the program never updates the account of a user without the permission of the owner of that account.
+* transaction.serialize() : All the data must be stored on the blockchain. To keep the content format agnostic of the programming language used, the data is serialized before storing. 
+* skipPreflight: It’s a bool data type
+    * true: preflight transaction checks for the available methods before sending the transaction, which involves a very little latency.
+    * false: (default value) : It is turned off by default to save the network bandwidth.
+* preflightCommitment: Every transaction on Solana goes through a process of finalization. The longer the transaction has existed on the blockchain, the less likely it is to get reverted. A transaction is reverted when the blockchain realizes later that the transaction was actually not supposed to be allowed. However, the process of finalization takes some time. Depending on the security required in your code, you can choose between single, confirmed and finalized security levels. Single means that there is atleast one “confirmation” given to the transaction by a validator on Solana.
+
+
+```
  const sendTransactionWithRetry = async (
    connection,
    wallet,
@@ -1010,37 +1161,23 @@ extendBorsh();
      }
       slot = confirmation?.slot || 0;
    } catch (err) {
-     // console.error('Timeout Error caught', err);
-     // if (err.timeout) {
-     //   throw new Error('Timed out awaiting confirmation on transaction');
-     // }
-     // let simulateResult: SimulatedTransactionResponse | null = null;
-     // try {
-     //   simulateResult = (
-     //     await simulateTransaction(connection, signedTransaction, 'single')
-     //   ).value;
-     // } catch (e) {}
-     // if (simulateResult && simulateResult.err) {
-     //   if (simulateResult.logs) {
-     //     for (let i = simulateResult.logs.length - 1; i >= 0; --i) {
-     //       const line = simulateResult.logs[i];
-     //       if (line.startsWith('Program log: ')) {
-     //         throw new Error(
-     //           'Transaction failed: ' + line.slice('Program log: '.length),
-     //         );
-     //       }
-     //     }
-     //   }
-     //   throw new Error(JSON.stringify(simulateResult.err));
-     // }
-     // throw new Error('Transaction failed');
-   } finally {
+    } finally {
      done = true;
    }
     console.log('Latency', txid, getUnixTs() - startTime);
    return { txid, slot };
  }
+```
 
+
+**getEdition: **Helps** **to find the correct edition of the NFT, based on the parameters passed.
+
+**findProgramAddress: **This utility method is used to find the associated address with the mintkey and the metadata account. 
+
+Associated token is needed to mint the new token and add the metadata data to the token.
+
+
+```
  async function getEdition(
    tokenMint,
  ){   
@@ -1056,6 +1193,18 @@ extendBorsh();
      )
    )[0];
  }
+```
+
+
+### Schema mapping of the required classes ###
+
+
+All the classes which we declared on the top need to be converted to struct format with valid data types like u8 which is expected from the on-chain program.
+
+Rust do not support the classes, it only supports the struct hence the classes needs to converted to struct to make the serialisation and deserialisation process valid.
+
+
+```
   const METADATA_SCHEMA = new Map([
    [
      CreateMetadataArgs,
@@ -1184,7 +1333,13 @@ extendBorsh();
      },
    ],
  ]);
+```
 
+
+**createMetadata**: In the below util function, we are trying to create the metadata for the mint token which was created earlier. Metadata is going to store the artifacts from the NFT which can be in the form of image/gif/video.
+
+
+```
  async function createMetadata(
    data,
    updateAuthority,
@@ -1312,7 +1467,9 @@ extendBorsh();
 ```
 
 
-## Subquest: Burn NFT utility ##
+### Subquest: Burn NFT util functions ###
+
+
 Once we created the NFT, there can be chances where we want to delete the created NFT.
 
 Example: We might be willing to delete the old membership card which was previously assigned to the user.
@@ -1492,222 +1649,163 @@ export const burn = async function (
 ```
 
 
-## **How to run this quest**
+**How to run this quest**
+
+
+
 1. Install phantom wallet chrome extension and add some SOL to the wallet.
 2. Create a react app 
     1. npx create-react-app create-nft
     2. cd create-nft
 3. Copy paste the below initiator code in the App.js
 
+	
+
+
 ```
-import "./App.css";
+import './App.css';
 import { Connection, PublicKey } from "@solana/web3.js";
 import * as web3 from '@solana/web3.js';
-import { createNewMintAuthority } from './utils/createNewMintAuthority';
 import { useEffect, useState } from 'react';
-import { mintTokenToAssociatedAccount } from './utils/mintTokenToAssociatedAccount';
-import { transferCustomToken } from './utils/transferCustomToken';
-import { createAssociatedAccountFromMintKeyAndMint } from './utils/createAssociatedAccountFromMintKeyAndMint';
 import nftImage from './nftImage.png'
 import { Creator, dataURLtoFile, mintNFT } from './utils/nftCreation';
 import domToImage from 'dom-to-image';
 import { programIds } from './utils/programIds';
 import { burn } from './utils/nftBurn';
-
+const programIds = {
+  token: new PublicKey(
+    'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
+  )
+}
 const NETWORK = web3.clusterApiUrl("devnet");
 const connection = new Connection(NETWORK);
-const decimals = 9
 
 function App() {
 
- const [provider, setProvider] = useState()
- const [providerPubKey, setProviderPub] = useState()
- const [mintSignature, setMintTransaction] = useState()
- const [tokenSignature, setTokenTransaction] = useState()
- const [tokenSignatureAirdrop , setAirdropTransaction] = useState()
- const [nftDetails, setNftDetails] = useState({})
- const [nftBurnSignature, setNftBurnSignature] = useState()
+  const [provider, setProvider] = useState()
+  const [providerPubKey, setProviderPub] = useState()
+  const [nftDetails, setNftDetails] = useState({})
+  const [nftBurnSignature, setNftBurnSignature] = useState()
 
- const mintNewToken = async () =>{
-   if(provider && !provider.isConnected){
-       provider.connect()
-     }
-   try{
-     const mintResult = await createNewMintAuthority(provider, decimals, connection)
-     console.log(mintResult.signature,'--- signature of the transaction---')
-     console.log(mintResult.mintAccount,'----mintAccount---')
-   }catch(err){
-     console.log(err
-       )
-   }
-}
-
-const mintTokenToAssociateAccountHandler = async () =>{
-   try{
-     const tokensToMint = 1
-     const mintPubkey = 'Bw94Agu3j5bT89ZnXPAgvPdC5gWVVLxQpud85QZPv1Eb' //SOLG mint authority
-     const associatedAccountPubkey = '8M8HtFqrMyfiVfvzFQPGb8TWRWZEGFxbFakeKaC7eBEz'
-     const transactionSignature = await mintTokenToAssociatedAccount(provider, connection, tokensToMint, new PublicKey(mintPubkey), new PublicKey(associatedAccountPubkey), provider)
-     setMintTransaction(transactionSignature.signature)
-   }catch(err){
-     console.log(err)
-   }
- }
-
-
-const transferTokenToAssociateAccountHandler = async () =>{
-   try{
-     const tokensToMint = 1
-     const fromCustomTokenAccountPubkey = '8M8HtFqrMyfiVfvzFQPGb8TWRWZEGFxbFakeKaC7eBEz' //associated account's public key of the connected wallet
-     const toAssociatedAccountPubkey = 'EfhdzcbMiAToWYke12ZqN8PmYmyEgRWdFaSKBEhxXYir' //associated account's public key of the receiver's wallet
-     const transactionSignature = await transferCustomToken(provider, connection, tokensToMint, new PublicKey(fromCustomTokenAccountPubkey), new PublicKey(toAssociatedAccountPubkey))
-     setTokenTransaction(transactionSignature.signature)
-   }catch(err){
-     console.log(err)
-   }
-}
-
-const airdropToUserWallet = async () =>{
- try{
-   const tokensToAirdrop = 1
-   const mintPubkey = 'Bw94Agu3j5bT89ZnXPAgvPdC5gWVVLxQpud85QZPv1Eb' // mintKey of the token to be minted
-   const ownerPubkey = '4deyFHL6LG6NYvceo7q2t9Bz66jSjrg8A1BxJH1wAgie' //receiver's Solana wallet address
-  
-   const transactionSignature = await createAssociatedAccountFromMintKeyAndMint(connection, provider, new PublicKey(mintPubkey), new PublicKey(ownerPubkey),"",tokensToAirdrop)
-   setAirdropTransaction(transactionSignature.transactionSignature)
- }catch(err){
-   console.log(err)
- }
-}
-
-const convertDOMtoBase64 = async () => {
- const node = document.getElementById('nftImage');
- return domToImage.toPng(node);
+  const convertDOMtoBase64 = async () => {
+  const node = document.getElementById('nftImage');
+  return domToImage.toPng(node);
 };
 
 
 const mintNewNFT = async () =>{
- try{
-   const img = await convertDOMtoBase64();
-   const templateImage = dataURLtoFile(img, 'My_NFT.png');
-   const ownerPublicKey = new PublicKey(provider.publicKey).toBase58();
-   const selfCreator = new Creator({
-     address: ownerPublicKey,
-     verified: true,
-     share: 100,
-   });
-   const metadata = {
-     name: `SOLG_NFT`,
-     symbol: 'MNFT',
-     creators: [selfCreator],
-     description: '',
-     sellerFeeBasisPoints: 0,
-     image: templateImage.name,
-     animation_url: '',
-     external_url: '',
-     properties: {
-       files: [templateImage],
-       category: 'image',
-     },
-   };
+  try{
+    const img = await convertDOMtoBase64();
+    const templateImage = dataURLtoFile(img, 'My_NFT.png');
+    const ownerPublicKey = new PublicKey(provider.publicKey).toBase58();
+    const selfCreator = new Creator({
+      address: ownerPublicKey,
+      verified: true,
+      share: 100,
+    });
+    const metadata = {
+      name: `SOLG_NFT`,
+      symbol: 'MNFT',
+      creators: [selfCreator],
+      description: '',
+      sellerFeeBasisPoints: 0,
+      image: templateImage.name,
+      animation_url: '',
+      external_url: '',
+      properties: {
+        files: [templateImage],
+        category: 'image',
+      },
+    };
 
-   const _nft = await mintNFT(
-     connection,
-     provider,
-     {},
-     [templateImage],
-     metadata,
-     1000000000
-   );
-   setNftDetails(_nft)
- }catch(err){
-   console.log(err)
- }
+    const _nft = await mintNFT(
+      connection,
+      provider,
+      {},
+      [templateImage],
+      metadata,
+      1000000000
+    );
+    setNftDetails(_nft)
+  }catch(err){
+    console.log(err)
+  }
 }
 
 
 const burnNFT = async () =>{
- const account = new PublicKey(nftDetails.account); //account address where the NFT is being minted
-   const owner = provider;
-   const multiSigners = [];
-   const amount = 1;
-   const connectionParam = connection;
-   const programId = programIds.token; //second wallet in sol chain
-   const publicKey = new PublicKey( nftDetails.mintKey); //nftMintKey you will receive while creating the NFT
-   const payer = provider;
-   const burnResult = await burn(
-     account,
-     owner,
-     multiSigners,
-     amount,
-     connectionParam,
-     programId,
-     publicKey,
-     payer
-   );
-   setNftBurnSignature(burnResult)
+  const account = new PublicKey(nftDetails.account); //account address where the NFT is being minted
+    const owner = provider;
+    const multiSigners = [];
+    const amount = 1;
+    const connectionParam = connection;
+    const programId = programIds.token; //second wallet in sol chain
+    const publicKey = new PublicKey( nftDetails.mintKey); //nftMintKey you will receive while creating the NFT
+    const payer = provider;
+    const burnResult = await burn(
+      account,
+      owner,
+      multiSigners,
+      amount,
+      connectionParam,
+      programId,
+      publicKey,
+      payer
+    );
+    setNftBurnSignature(burnResult)
 }
 
 
 const connectToWallet = () =>{
- if(!provider && window.solana){
-   setProvider(window.solana)
- }
- if(!provider){
-   console.log("No provider found")
-   return
- }
- if(provider && !provider.isConnected){
-   provider.connect()
- }
+  if(!provider && window.solana){
+    setProvider(window.solana)
+  }
+  if(!provider){
+    console.log("No provider found")
+    return
+  }
+  if(provider && !provider.isConnected){
+    provider.connect()
+  }
 }
 
 
- useEffect(() => {
-   if (provider) {
-       provider.on("connect", async() => {
-         console.log("wallet got connected")
-         setProviderPub(provider.publicKey)
+  useEffect(() => {
+    if (provider) {
+        provider.on("connect", async() => {
+          console.log("wallet got connected")
+          setProviderPub(provider.publicKey)
 
-       });
-       provider.on("disconnect", () => {
-         console.log("Disconnected from wallet");
-       });
-   }
- }, [provider]);
+        });
+        provider.on("disconnect", () => {
+          console.log("Disconnected from wallet");
+        });
+    }
+  }, [provider]);
 
- useEffect(() => {
-   if ("solana" in window && !provider) {
-     console.log("Phantom wallet present")
-     setProvider(window.solana)
-   }
- },[])
+  useEffect(() => {
+    if ("solana" in window && !provider) {
+      console.log("Phantom wallet present")
+      setProvider(window.solana)
+    }
+  },[])
 
- return (
-   <div className="App">
-     <header className="App-header">
-        
-          <button onClick={connectToWallet}> {providerPubKey ? 'Connected' : 'Connect'} to wallet {providerPubKey ? (providerPubKey).toBase58() : ""}</button>
-          {/* <button onClick={mintNewToken}>Create new token</button>
-          <button onClick={mintTokenToAssociateAccountHandler}> {mintSignature ? `Minted new token, signature: ${mintSignature}`: 'Mint New Token'} </button>
-          <button onClick={transferTokenToAssociateAccountHandler}> {tokenSignature ? `Token transferred, signature: ${tokenSignature}`:'Transfer Token' } </button>
-          <button onClick={airdropToUserWallet}> {tokenSignatureAirdrop ? `Token airdropped, signature: ${tokenSignatureAirdrop}`:'Airdrop Token' } </button>*/}
-         
-          <br></br>
-          <img src={nftImage} style={{width:"200px"}} id="nftImage"></img>
-         <button onClick={mintNewNFT}> {nftDetails && nftDetails.mintKey ? `NFT created, mintkey: ${nftDetails.mintKey}`:'Create NFT' } </button>
-         <button onClick={burnNFT}> {nftBurnSignature ? `NFT burnt, signature: ${nftBurnSignature}`:'Burn NFT' } </button>
-     </header>
-   </div>
- );
+  return (
+    <div className="App">
+      <header className="App-header">
+          
+           <button onClick={connectToWallet}> {providerPubKey ? 'Connected' : 'Connect'} to wallet {providerPubKey ? (providerPubKey).toBase58() : ""}</button>
+           
+           <img src={nftImage} style={{width:"200px"}} id="nftImage"></img>
+          <button onClick={mintNewNFT}> {nftDetails && nftDetails.mintKey ? `NFT created, mintkey: ${nftDetails.mintKey}`:'Create NFT' } </button>
+          <button onClick={burnNFT}> {nftBurnSignature ? `NFT burnt, signature: ${nftBurnSignature}`:'Burn NFT' } </button>
+      </header>
+    </div>
+  );
 }
 
 export default App;
 ```
-
-
-
-
 4. To install the required dependencies:  “npm install” from the root folder of the project.
 5. To run the project : “npm run start” from the root folder of the project.
 6. Navigate to[ http://localhost:3000](http://localhost:3000) 
@@ -1716,7 +1814,7 @@ export default App;
 9. Check your wallet to confirm the NFT created.
 10. Once NFT is created, click on “Burn NFT” to burn the newly created NFT.
 
-## **Subquest : What next?**
+**Subquest : What next?**
 
 **What can you build taking this quest as a base ?**
 
