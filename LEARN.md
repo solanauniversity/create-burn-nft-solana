@@ -1,10 +1,8 @@
-# Create and Burn NFT on Solana Blockchain using only Web3 #
-
-**Introduction**
+# Create and Burn NFT on Solana Blockchain using only Web3
 
 In this quest we will be working on creating our own NFT (Non-Fungible Token) in Solana Blockchain using web3.js only.Everyday we hear the term NFT and few of the NFTs get sold for millions as well. So in this quest we will deep dive into the NFT creation and burning process.
 
-**What will you get after going through this quest ?**
+## What will you get after going through this quest ?
 
 
 
@@ -14,7 +12,7 @@ In this quest we will be working on creating our own NFT (Non-Fungible Token) in
 4. You will understand how to **burn** your NFT.
 5. You will understand the importance of associated accounts while creating the NFT.
 
-**What is the difference between Fungible Token and Non-Fungible Token (NFT) ?**
+## What is the difference between Fungible Token and Non-Fungible Token (NFT) ?
 
 **Fungible token : **The tokens which have the supply of more than 1 and can be distributed to different users.
 
@@ -26,13 +24,13 @@ Hence NFT (Non-Fungible Token) is a form of token which can exist uniquely throu
 
 It provides the ownership of the digital asset which can be uniquely identified forever.
 
-**Why create your own NFT ?**
+## Why create your own NFT ?
 
 Creating our own token which can uniquely exist gives us the feeling of ownership. You can claim any artwork or any piece of unique art which you think can have value in the future.
 
 These days NFTs are also being categorised under the future investment as with the more adoption of blockchain, it is believed that value of NFTs will increase in future.
 
-**Prerequisites to work on this quest**
+## Prerequisites to work on this quest
 
 
 
@@ -42,7 +40,7 @@ These days NFTs are also being categorised under the future investment as with t
 4. Funded Solana wallet atleast 0.5 SOL .
 5. For better understanding, please go through our first quest on **creating a wallet connection** with react app.
 
-**Folder structure expected of the react app to run this quest**
+## Folder structure expected of the react app to run this quest
 
 
 
@@ -59,7 +57,7 @@ These days NFTs are also being categorised under the future investment as with t
             * Index.js
             * Package.json
 
-**Basic terminologies to digest before we jump into the quest**
+## Basic terminologies to digest before we jump into the quest
 
 
 
@@ -67,13 +65,13 @@ These days NFTs are also being categorised under the future investment as with t
 2. **Minting Token:** When you try to print new currency notes in the real world, it increases the supply of the notes. In the same way, if we need to increase the supply of our token in the market then we mint (print) the tokens to an associated account. \
 Minting process will increase the total supply of the custom token. In the case of NFT, the total supply can be only 1.
 
-### Subquest: Metaplex NFT creation flow with metadata ###
+## Metaplex NFT creation flow with metadata
 ![alt_text](./learn_src/learn_assets/create-metaplex-nft-solana.png "Create or Burn NFT on Solana ")
 
-### Subquest: NFT creation flow ###
+## NFT creation flow
 ![alt_text](./learn_src/learn_assets/create-nft-solana.png "Create or Burn NFT on Solana ")
 
-### Subquest: Create NFT util functions ###
+## Create NFT util functions
 
 
 As NFTs are meant to be represented in the form of image/video/gif, hence each NFT needs to be associated with a metadata account which can hold the image/video/gif for the NFT and fetch the data wherever needed.
@@ -171,7 +169,7 @@ export const TOKEN_PROGRAM_ID = programIds.token
 ```
 
 
-### On-chain program’s data structures###
+## On-chain program’s data structures
 
 
 On-chain program expects the data to be in structure format hence to pass a valid format the class needs to be created and then serialised through Borsh serialiser.
@@ -355,7 +353,7 @@ class CreateMetadataArgs {
 ```
 
 
-### Connection provider to the Phantom Wallet###
+## Connection provider to the Phantom Wallet
 
 
 In the utility function below, we are trying to connect to the wallet if it is not connected already.
@@ -389,7 +387,7 @@ export const connectOrGetPhantomProvider = (connectToWallet) => {
 ```
 
 
-### DOM to Image util function###
+## DOM to Image util function
 
 
 To create NFT which can hold the image as the metadata we need to provide the image in the form of base64 encoded string and from base64 to file object which eventually gets uploaded to arweave.
@@ -954,7 +952,7 @@ Deterministic function is needed because it will help to deduplicate any associa
 ```
 
 
-### Transaction which needs to be signed ###
+## Transaction which needs to be signed
 
 
 **sendTransactionWithRetry:** Used to retry the transaction in case of failure. While doing any transaction in blockchain there is always a chance of transaction failure and it can lead to bad user experience if it fails in the first go. Hence this function helps to re-initiate the transaction in case of failure.
@@ -1196,7 +1194,7 @@ Associated token is needed to mint the new token and add the metadata data to th
 ```
 
 
-### Schema mapping of the required classes ###
+## Schema mapping of the required classes
 
 
 All the classes which we declared on the top need to be converted to struct format with valid data types like u8 which is expected from the on-chain program.
@@ -1467,7 +1465,7 @@ Rust do not support the classes, it only supports the struct hence the classes n
 ```
 
 
-### Subquest: Burn NFT util functions ###
+## Burn NFT util functions
 
 
 Once we created the NFT, there can be chances where we want to delete the created NFT.
@@ -1649,7 +1647,7 @@ export const burn = async function (
 ```
 
 
-**How to run this quest**
+## How to run this quest
 
 
 
@@ -1814,7 +1812,7 @@ export default App;
 9. Check your wallet to confirm the NFT created.
 10. Once NFT is created, click on “Burn NFT” to burn the newly created NFT.
 
-**Subquest : What next?**
+## What next?
 
 **What can you build taking this quest as a base ?**
 
